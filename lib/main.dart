@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:islamic_habit_tracker/config/theme/app_theme.dart';
 import 'package:islamic_habit_tracker/core/utils/daily_reset_service.dart';
 import 'package:islamic_habit_tracker/features/habit/presentation/provider/habit_form_provider.dart';
 import 'package:provider/provider.dart';
@@ -122,7 +123,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Islamic Habit Tracker',
-        theme: ThemeData(primarySwatch: Colors.green),
+        theme: appTheme,
         home: const HabitScreen(),
       ),
     );

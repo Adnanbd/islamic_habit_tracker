@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:islamic_habit_tracker/features/habit/presentation/screens/add_habit_screen.dart';
-import 'package:islamic_habit_tracker/features/notification/notification_service.dart';
+import 'package:islamic_habit_tracker/features/habit/presentation/screens/habit_list_screen.dart';
+import 'package:islamic_habit_tracker/main.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../provider/habit_provider.dart';
@@ -48,7 +48,55 @@ class _HabitScreenState extends State<HabitScreen> {
                       padding: EdgeInsets.only(right: 16),
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
-                    onDismissed: (_) => provider.deleteHabit(habit.id),
+                    confirmDismiss: (direction) async {
+                      final confirm = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: Colors.red.shade100,
+                                  child: Icon(Icons.delete, color: Colors.red, size: 30),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Are you sure you want to delete "${habit.title}"?',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 25),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                            // actionsAlignment: MainAxisAlignment.,
+                          );
+                        },
+                      );
+                      return confirm;
+                    },
+                    onDismissed: (_) async {
+                      await provider.deleteHabit(habit.id);
+                      await flutterLocalNotificationsPlugin.cancel(int.parse(habit.id));
+                    },
                     child: ListTile(
                       leading: Checkbox(
                         value: habit.isCompleted,
@@ -59,7 +107,7 @@ class _HabitScreenState extends State<HabitScreen> {
                         },
                       ),
                       subtitle: buildProgressBar(habit),
-                      title: Text(habit.title),
+                      title: Text('${habit.title}'),
                       trailing: IconButton(icon: Icon(Icons.edit), onPressed: () => _showEditDialog(context, habit)),
                     ),
                   );
@@ -68,8 +116,8 @@ class _HabitScreenState extends State<HabitScreen> {
       floatingActionButton: FloatingActionButton(
         // onPressed: () => _showAddHabitDialog(context),
         onPressed: () {
-          NotificationService.scheduleDailyNotification(id: 1, title: 'title', body: 'body', time: DateTime.now());
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => AddHabitScreen()));
+          // NotificationService.scheduleDailyNotification(id: 1, title: 'title', body: 'body', time: DateTime.now());
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HabitListScreen()));
         },
         child: const Icon(Icons.add),
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HabitFormProvider with ChangeNotifier {
-  String _title = '';
+  String? _title;
   DateTime? _reminderTime;
 
-  String get title => _title;
+  String? get title => _title;
   DateTime? get reminderTime => _reminderTime;
 
   void setTitle(String value) {
@@ -14,13 +14,7 @@ class HabitFormProvider with ChangeNotifier {
 
   void setReminderTime(TimeOfDay timeOfDay) {
     final now = DateTime.now();
-    _reminderTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      timeOfDay.hour,
-      timeOfDay.minute,
-    );
+    _reminderTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     notifyListeners();
   }
 
@@ -30,7 +24,7 @@ class HabitFormProvider with ChangeNotifier {
   }
 
   void reset() {
-    _title = '';
+    _title = null;
     _reminderTime = null;
   }
 }

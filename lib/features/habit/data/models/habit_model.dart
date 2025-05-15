@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../../domain/entities/habit.dart';
 import 'package:hive/hive.dart';
 
@@ -37,7 +35,7 @@ class HabitModel extends HiveObject {
   factory HabitModel.fromEntity(Habit habit) {
     return HabitModel(
       id: habit.id,
-      title: habit.title,
+      title: habit.title ?? '',
       isCompleted: habit.isCompleted,
       completionHistory: habit.completionHistory,
       createdDate: habit.createdDate,

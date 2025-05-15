@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Habit {
   final String id;
-  final String title;
+  final String? title;
   final bool isCompleted;
   final Map<String, bool> completionHistory;
   final DateTime createdDate;
